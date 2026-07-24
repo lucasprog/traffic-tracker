@@ -1,0 +1,15 @@
+{
+    "name": "traffic-web/core-api",
+    "autoload": {
+        "psr-4": {
+            "TrafficWeb\\CoreApi\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Lucas S. Jesus",
+            "email": "lucasnetprog@gmail.com"
+        }
+    ],
+    "require": {}
+}
