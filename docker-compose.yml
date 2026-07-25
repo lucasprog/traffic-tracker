@@ -1,0 +1,84 @@
+services:
+  web:
+    image: nginx:latest 
+    volumes:
+      - ./core-api:/var/www
+      - ./core-api/docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
+    environment:
+      - NGINX_HOST=localhost
+    networks:
+      - traffic-web-network
+    depends_on:
+      php-fpm:
+        condition: service_started  
+
+  php-fpm:
+    build:
+      context: .
+      dockerfile: ./core-api/docker/php-fpm/Dockerfile
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+        XDEBUG_ENABLED: ${XDEBUG_ENABLED:-true}
+        XDEBUG_MODE: develop,coverage,debug,profile
+        XDEBUG_HOST: ${XDEBUG_HOST:-host.docker.internal}
+        XDEBUG_IDE_KEY: ${XDEBUG_IDE_KEY:-DOCKER}
+        XDEBUG_LOG: /dev/stdout
+        XDEBUG_LOG_LEVEL: 0
+    volumes:
+      - ./core-api:/var/www
+    networks:
+      - traffic-web-network
+    depends_on:
+      mysql:
+        condition: service_started
+
+  workspace-php:
+    build:
+      context: .
+      dockerfile: ./core-api/docker/workspace/Dockerfile
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+        XDEBUG_ENABLED: ${XDEBUG_ENABLED:-true}
+        XDEBUG_MODE: develop,coverage,debug,profile
+        XDEBUG_HOST: ${XDEBUG_HOST:-host.docker.internal}
+        XDEBUG_IDE_KEY: ${XDEBUG_IDE_KEY:-DOCKER}
+        XDEBUG_LOG: /dev/stdout
+        XDEBUG_LOG_LEVEL: 0
+    ports:
+      - '${VITE_PORT:-5173}:5173'
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./core-api:/var/www
+    networks:
+      - traffic-web-network
+
+  mysql:
+    image: mysql
+    restart: always
+    container_name: mysql_db
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: traffic-web_db
+      MYSQL_USER: user_db
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_PASSWORD: password
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+
+  redis:
+    image: redis:alpine
+    networks:
+      - traffic-web-network
+
+networks:
+  traffic-web-network:
+
+volumes:
+  mysql_data:
