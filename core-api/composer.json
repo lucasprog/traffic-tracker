@@ -15,5 +15,8 @@
             "email": "lucasnetprog@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "firebase/php-jwt": "^7.1",
+        "vlucas/phpdotenv": "^5.6"
+    }
 }
