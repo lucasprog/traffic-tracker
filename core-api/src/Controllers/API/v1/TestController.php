@@ -3,6 +3,7 @@
 namespace App\Controllers\API\v1;
 
 use System\Services\Response\ResponseResolver as Response;
+use System\Database\Connection;
 
 class TestController
 {
@@ -19,6 +20,7 @@ class TestController
 
     public function blog(string $id, string $slug)
     {
+        
         return Response::responseJson([
             "message" => "yes, everything ok!"
         ]);
