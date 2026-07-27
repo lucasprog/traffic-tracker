@@ -2,7 +2,8 @@ CREATE TABLE IF NOT EXISTS `websites` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(150),
     `domain` VARCHAR(255),
-    `code_script` VARCHAR(150)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS `pages` (
@@ -11,5 +12,7 @@ CREATE TABLE IF NOT EXISTS `pages` (
     `route` VARCHAR(255),
     `visitor_id` VARCHAR(255),
     `website_id` INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT fk_website_pages FOREIGN KEY (`website_id`) REFERENCES `websites`(`id`)
 );

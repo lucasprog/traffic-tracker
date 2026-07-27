@@ -63,10 +63,11 @@ class Model implements ModelInterface
     {   
         $columns = $this->convertColumnsToString();
 
-        $query = $this->db->query("SELECT {$columns} FROM {$this->table};");
+        $q = "SELECT {$columns} FROM {$this->table};";
+
+        $query = $this->db->query($q);
 
         return $query->fetchAll(PDO::FETCH_OBJ);
-
     }
 
     public function find(string $whereNameColumn, string $whereValue, ?string $columns = null ): stdClass
@@ -126,5 +127,10 @@ class Model implements ModelInterface
         }
 
         return $columns;
+    }
+
+    public function getDB()
+    {
+        return $this->db;
     }
 }

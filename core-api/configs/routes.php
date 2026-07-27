@@ -1,31 +1,47 @@
 <?php
 
-use App\Controllers\API\v1\TestController;
+use App\Controllers\WebSitesController;
+use App\Controllers\PagesController;
 
 return array(
     [
         "method" => "GET",
-        "route" => "/",
-        "controller" => TestController::class . "@index"
+        "route" => "/website",
+        "controller" => WebSitesController::class . "@get"
+    ],
+    [
+        "method" => "POST",
+        "route" => "/website",
+        "controller" => WebSitesController::class . "@store"
+    ],
+    [
+        "method" => "PUT",
+        "route" => "/website/{id}",
+        "controller" => WebSitesController::class . "@update"
+    ],
+    [
+        "method" => "DELETE",
+        "route" => "/website/{id}",
+        "controller" => WebSitesController::class . "@delete"
     ],
     [
         "method" => "GET",
-        "route" => "/about",
-        "controller" => TestController::class . "@about"
+        "route" => "/pages/{website_id}",
+        "controller" => PagesController::class . "@get"
     ],
     [
-        "method" => "GET",
-        "route" => "/blog/{slug}",
-        "controller" => TestController::class . "@blog"
+        "method" => "POST",
+        "route" => "/pages/{website_id}",
+        "controller" => PagesController::class . "@store"
     ],
     [
-        "method" => "GET",
-        "route" => "/site/{id}/edit",
-        "controller" => TestController::class . "@blog"
+        "method" => "PUT",
+        "route" => "/pages/{website_id}/{id}",
+        "controller" => PagesController::class . "@update"
     ],
     [
-        "method" => "GET",
-        "route" => "/site/{id}/edit/{slug}",
-        "controller" => TestController::class . "@blog"
+        "method" => "DELETE",
+        "route" => "/pages/{website_id}{id}",
+        "controller" => PagesController::class . "@delete"
     ]
 );

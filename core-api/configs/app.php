@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'only_api' => true
+    'only_api' => true    
 ];

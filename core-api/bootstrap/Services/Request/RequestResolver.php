@@ -19,14 +19,12 @@ class RequestResolver implements RequestResolverInterface
         $this->requestQueryString = $_SERVER['QUERY_STRING'];        
     }
 
-
     private function cleanRequestURI(): void
     {
         if( strpos($this->requestURI,"?") ) {
             $this->requestURI = str_replace("?" . $this->requestQueryString,"",$this->requestURI);
         }   
     }
-
 
     public function data(): array
     {
@@ -41,12 +39,18 @@ class RequestResolver implements RequestResolverInterface
 
     public function currentRoute(): string
     {
+        $this->cleanRequestURI(); 
         return $this->requestURI;
+    }
+
+    public function queryString(): string
+    {
+        return $this->requestQueryString;
     }
 
     public function methodRequest(): string
     {
-        return $this->requestQueryString;
+        return $this->requestMethod;
     }
 
     public function onlyAPI():void

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use System\Database\Model;
 
-class WebsitesModel extends Model 
+class WebSitesModel extends Model 
 {
 
     protected ?string $table = "websites";
@@ -13,7 +13,8 @@ class WebsitesModel extends Model
         'id',
         "name",
         "domain",
-        "code_script"  
+        "created_at",
+        "updated_at"
     ];
 
 }

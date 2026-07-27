@@ -8,6 +8,8 @@ interface RequestResolverInterface
 
     public function currentRoute(): string;
 
+    public function queryString(): string;
+
     public function methodRequest(): string;
 
     public function onlyAPI(): void;

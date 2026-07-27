@@ -4,7 +4,8 @@ use System\Services\ApplicationHandle;
 use System\Services\Response\ResponseResolver as Response;
 
 try{
-    
+
+        
     $dotenv = Dotenv\Dotenv::createImmutable(dirname(__FILE__,2));
     $dotenv->load();
 
@@ -16,7 +17,12 @@ try{
 
     echo Response::responseJson([
         "message" => $e->getMessage()
-    ]);
+    ],500);
+
+}catch(PDOException $e){
+    echo Response::responseJson([
+        "message" => $e->getMessage()
+    ],500);
 }
 
 
