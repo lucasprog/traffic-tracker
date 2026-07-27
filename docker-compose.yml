@@ -27,6 +27,7 @@ services:
         XDEBUG_IDE_KEY: ${XDEBUG_IDE_KEY:-DOCKER}
         XDEBUG_LOG: /dev/stdout
         XDEBUG_LOG_LEVEL: 0
+    user: "${UID}:${GID}"
     volumes:
       - ./core-api:/var/www
     networks:
@@ -74,8 +75,22 @@ services:
     networks:
       - traffic-web-network
 
-  redis:
-    image: redis:alpine
+  panel:
+    build:
+      context: .
+      dockerfile: panel/docker/Dockerfile
+    user: "${UID}:${GID}"
+    container_name: panel
+    working_dir: /var/www
+    volumes:
+      - ./panel:/var/www
+      - ./panel/node_modules:/var/www/node_modules
+    ports:
+      - "81:5173"
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
+    stdin_open: true
+    tty: true
     networks:
       - traffic-web-network
 
