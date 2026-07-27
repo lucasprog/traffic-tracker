@@ -1,11 +1,17 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import LayoutPanel from "./layouts/layout-panel.vue"
+import { RouterView } from 'vue-router'
+</script>
 
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+  <LayoutPanel>
+    <RouterView />
+  </LayoutPanel>
 </template>
 
-<style scoped></style>
+<style lang="scss" scoped>
+@reference 'tailwindcss';
+app {
+  @apply flex flex-col items-center justify-center min-h-screen h-full w-full;
+}
+</style>
