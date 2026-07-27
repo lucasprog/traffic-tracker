@@ -1,1 +1,41 @@
 core-api/vendor/*
+
+# Logs
+panel/logs
+panel/*.log
+panel/npm-debug.log*
+panel/yarn-debug.log*
+panel/yarn-error.log*
+panel/pnpm-debug.log*
+panel/lerna-debug.log*
+
+panel/node_modules
+panel/.DS_Store
+panel/dist
+panel/dist-ssr
+panel/coverage
+panel/*.local
+
+# Editor directories and files
+panel/.vscode/*
+panel/!.vscode/extensions.json
+panel/.idea
+panel/*.suo
+panel/*.ntvs*
+panel/*.njsproj
+panel/*.sln
+panel/*.sw?
+
+panel/*.tsbuildinfo
+
+panel/.eslintcache
+
+# Cypress
+panel/cypress/videos/
+panel/cypress/screenshots/
+
+# Vitest
+panel/__screenshots__/
+
+# Vite
+panel/*.timestamp-*-*.mjs
