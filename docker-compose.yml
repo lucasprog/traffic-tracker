@@ -102,7 +102,7 @@ services:
     container_name: example-site
     working_dir: /var/www
     volumes:
-      - ./example-website:/var/www
+      - ./example-website/site:/usr/share/nginx/html
     ports:
       - "8081:80"
     environment:
