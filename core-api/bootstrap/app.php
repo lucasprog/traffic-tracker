@@ -16,7 +16,7 @@ try{
 
     echo Response::responseJson([
         "message" => $e->getMessage()
-    ], $e->getCode()??500);
+    ]);
 }
 
 

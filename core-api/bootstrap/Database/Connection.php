@@ -6,7 +6,7 @@ use PDO;
 
 class Connection
 {
-    protected PDO $db;
+
     private static ?self $instance = null;
 
     public static function getInstance(): self
@@ -21,7 +21,7 @@ class Connection
 
     public function db(): PDO
     {
-         $db_name = $_ENV["DATABASE_NAME"];
+        $db_name = $_ENV["DATABASE_NAME"];
         $db_user = $_ENV["DATABASE_USER"];
         $db_host = $_ENV["DATABASE_HOST"];
         $db_password = $_ENV["DATABASE_PASSWORD"];
