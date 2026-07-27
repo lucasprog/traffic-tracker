@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\WebSitesModel;
 use Exception;
+use stdClass;
 use System\Database\ModelInterface;
 
 class WebSitesService
@@ -39,8 +40,22 @@ class WebSitesService
     {
 
         $this->validate($data);
+
+        if( !$this->findByDomain($data['domain']) )
+        {
+            $websiteCreated = $this->model->create($data);
+    
+            if( $websiteCreated )
+            {
+                return $this->model->select("id,name,domain")->where("id",$websiteCreated)->first();
+            }
+    
+            return $websiteCreated;
+            
+        }
+
+        throw new Exception("Website exist!");
         
-        return $this->model->create($data);
     }
 
     public function update(array $data, int $id)
@@ -53,16 +68,28 @@ class WebSitesService
 
     public function delete(int $id)
     {        
-        return $this->model->delete($id);
+        return $this->model->delete("id", $id);
     }
 
-    public function get()
-    {        
-        return $this->model->get();
+    public function get(array $params)
+    {   
+        $model = $this->model->select("*");
+        
+        foreach($params as $key => $param )
+        {
+            $model->where($key,"like","%".$param."%");   
+        }
+
+        return $model->get();
     }
 
-    public function find(int $id)
+    public function find(int $id):stdClass|bool
     {        
-        return $this->model->find("id",$id);
+        return $this->model->find($id);
+    }
+
+    public function findByDomain(string $domain):stdClass|bool
+    {        
+        return $this->model->select("*")->where("domain",$domain)->first();
     }
 }

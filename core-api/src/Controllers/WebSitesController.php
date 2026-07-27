@@ -18,20 +18,22 @@ class WebSitesController
         return Response::responseJson($this->websiteService->get($params));
     }
 
-    public function store(Request $request )
-    {
+    public function store(Request $request )    {
         
-        if( $this->websiteService->create($request->post()) ){
-            return Response::responseJson([
-                "success" => true,
-                "message" => "Website created with success!"
-            ],201);
-        }
+        $websiteCreated =  $this->websiteService->create($request->post());
 
+        if( !$websiteCreated ){
+            return Response::responseJson([
+                "success" => false,
+                "message" => "Oops, something happened to create Website!"
+                ],500);
+        }
+        
         return Response::responseJson([
-            "success" => false,
-            "message" => "Oops, something happened to create Website!"
-        ],500);
+            "success" => true,
+            "data" => $websiteCreated,
+            "message" => "Website created with success!"
+        ],201);
 
     }
 

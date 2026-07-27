@@ -13,13 +13,27 @@ class Model implements ModelInterface
     protected ?PDO $db = null;
     protected ?string $table;
     protected ?array $columns= [];
+    protected array $query = [
+        "select" => null,
+        "where" => " WHERE ",
+        "limit" => null,
+        "groupBy" => null,
+        "orderBy" => null
+    ];
+    protected array $queryWhereValues = [];
+    private $allowedOperator  = [
+        '=', '<', '>', '<=', '>=', '<>', '!=', 
+        'LIKE', 'NOT LIKE', 'IN', 'NOT IN', 
+        'BETWEEN', 'IS', 'IS NOT'
+    ];
+
 
     public function __construct()
     {
         $this->db = Connection::getInstance()->db();           
     }
 
-    public function create(array $datasToInsert = []): bool
+    public function create(array $datasToInsert = []): int
     {
 
         if( count($datasToInsert) < 1 )
@@ -28,14 +42,13 @@ class Model implements ModelInterface
         }
 
         $datasProcessed = $this->prepareDataQuery($datasToInsert);
-
         $query = $this->db->prepare("INSERT INTO {$this->table} 
                                         ({$datasProcessed['columns']}) 
                                     VALUES ({$datasProcessed['valuesOfColumn']})
                                 ");
         $query ->execute($datasProcessed["valuesCombined"]);
 
-        return $query->rowCount() > 0;
+        return $this->db->lastInsertId();
 
     }
 
@@ -59,7 +72,7 @@ class Model implements ModelInterface
     }
 
 
-    public function get(?string $columns = null): array
+    public function getAll(?string $columns = null): array
     {   
         $columns = $this->convertColumnsToString();
 
@@ -70,32 +83,93 @@ class Model implements ModelInterface
         return $query->fetchAll(PDO::FETCH_OBJ);
     }
 
-    public function find(string $whereNameColumn, string $whereValue, ?string $columns = null ): stdClass
+    public function select(string $select): ModelInterface
     {   
-        $columns = $this->convertColumnsToString();
-        
-        $query = $this->db->query("SELECT {$columns} 
-                                    FROM {$this->table} 
-                                    WHERE {$whereNameColumn} = {$whereValue}                               
-                                    LIMIT 1;
-                                ");
-
-        return $query->fetch(PDO::FETCH_OBJ);
-
+        $this->query["select"] = "SELECT {$select} FROM {$this->table}";
+        return $this;
     }
 
-    public function delete(int $id): bool
-    {
-        if( !isset($id) )
-        {
-            return false;      
-        }   
+    public function selectDistinct(string $select): ModelInterface
+    {   
+        $this->query["select"] = "SELECT DISTINCT {$select} FROM {$this->table}";
+        return $this;
+    }
 
-        $query = $this->db->prepare("DELETE FROM {$this->table} WHERE id = :id ");
-        $query->bindParam(":id", $id);
+    
+    public function where(string $column,string $valueOrOperator, ?string $value = null ): ModelInterface
+    {
+
+        $this->query["where"] .= $this->query["where"] === " WHERE "? "{$column}" : " AND {$column}";
+
+        $this->whereLogic($valueOrOperator, $value);
+
+        return $this;
+        
+    }
+
+    public function whereOr(string $column,string $valueOrOperator, ?string $value = null ): ModelInterface
+    {
+
+        $this->query["where"] .= $this->query["where"] === " WHERE "? "{$column}" : " OR {$column}";
+
+        $this->whereLogic($valueOrOperator, $value);
+
+        return $this;
+        
+    }
+
+    public function limit(int $limit): ModelInterface
+    {
+        $this->query["limit"] = " LIMIT {$limit}";
+        return $this;
+    }
+
+    public function get(): array
+    {
+        $query = $this->prepareSelectQuery();
+        $query->execute($this->queryWhereValues);
+
+        return $query->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    public function first(): stdClass|bool
+    {
+        $this->limit(1);
+        $query = $this->prepareSelectQuery();
+        $query->execute($this->queryWhereValues);
+
+        return $query->fetch(PDO::FETCH_OBJ);
+    }
+
+    public function find(int $id ): stdClass|bool
+    {           
+        return $this->select("*")->where("id",$id)->first();
+    }
+
+    public function delete(string $column, string $value): bool
+    {
+        $query = $this->db->prepare("DELETE FROM {$this->table} WHERE {$column} = :{$column}");
+        $query->bindParam(":{$column}", $value);
         $query->execute();
 
         return $query->rowCount() > 0;
+    }
+    
+    public function groupBy(string $groupBy): ModelInterface
+    {
+        $this->query["groupBy"] = " GROUP BY $groupBy";
+        return $this;
+    }
+
+    public function orderBy(string $orderBy, string $order): ModelInterface
+    {
+        $this->query["orderBy"] = " ORDER BY {$orderBy} {$order}";
+        return $this;
+    }
+
+    public function getDB()
+    {
+        return $this->db;
     }
 
     private function prepareDataQuery(array $datas)
@@ -129,8 +203,36 @@ class Model implements ModelInterface
         return $columns;
     }
 
-    public function getDB()
+    private function whereLogic(string $valueOrOperator, ?string $value = null)
     {
-        return $this->db;
+        if( in_array(strtoupper(trim($valueOrOperator)), $this->allowedOperator, true) )
+        {
+            $this->query["where"] .= " {$valueOrOperator} ?";
+            $this->queryWhereValues[] = $value;
+        }else{
+            $this->query["where"] .= " = ?";
+            $this->queryWhereValues[] = $valueOrOperator;
+        }        
     }
+
+    private function prepareSelectQuery()
+    {
+        $query =  $this->query["select"] . 
+            (
+                $this->query["where"] === " WHERE "?'':$this->query["where"]
+            ) . 
+            (
+                $this->query['limit']??''
+            ) .
+            (
+                $this->query["groupBy"]??''
+            ) .
+            (
+                $this->query["orderBy"]??''
+            );
+        return $this->db->prepare($query);
+    }
+
+
+
 }

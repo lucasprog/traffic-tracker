@@ -26,22 +26,17 @@ return array(
     ],
     [
         "method" => "GET",
+        "route" => "/pages/all",
+        "controller" => PagesController::class . "@getAll"
+    ],
+    [
+        "method" => "GET",
         "route" => "/pages/{website_id}",
-        "controller" => PagesController::class . "@get"
+        "controller" => PagesController::class . "@getByWebsite"
     ],
     [
         "method" => "POST",
-        "route" => "/pages/{website_id}",
-        "controller" => PagesController::class . "@store"
-    ],
-    [
-        "method" => "PUT",
-        "route" => "/pages/{website_id}/{id}",
-        "controller" => PagesController::class . "@update"
-    ],
-    [
-        "method" => "DELETE",
-        "route" => "/pages/{website_id}{id}",
-        "controller" => PagesController::class . "@delete"
+        "route" => "/page/tracking",
+        "controller" => PagesController::class . "@tracking"
     ]
 );
