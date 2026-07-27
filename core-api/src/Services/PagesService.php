@@ -87,7 +87,7 @@ class PagesService
     public function getDataTrack(array $params)
     {        
         $model = $this->model
-            ->selectDistinct("name,route, COUNT(DISTINCT visitor_id) as unique_visits,website_id");
+            ->selectDistinct("name,route, COUNT(DISTINCT visitor_id) as unique_visits, website_id, created_at");
 
         if( isset($this->website) )
         {
@@ -111,7 +111,7 @@ class PagesService
             $model = $model->where($key,$param);
         }
 
-        return $model->groupBy("name,route,website_id")->orderBy("unique_visits","DESC")->get();
+        return $model->groupBy("name,route,website_id,created_at")->orderBy("unique_visits","DESC")->get();
     }
 
     public function find(int $id)

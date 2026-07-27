@@ -19,6 +19,16 @@
   const search = () => {
     usePagesStore().get();
   }
+
+  const currentTimestamp = new Date();
+
+  const formatDate = (value) => {
+    if (!value) return '';
+    return new Intl.DateTimeFormat('en-US', {
+      dateStyle: 'medium',
+      timeStyle: 'short'
+    }).format(new Date(value));
+  };
 </script>
 <template>
   <Card>
@@ -35,6 +45,7 @@
         <th>Route</th>
         <th>Qtd Visits</th>
         <th>Website</th>
+        <th>Time</th>
       </tr>
     </thead>
     <tbody>
@@ -43,6 +54,7 @@
         <td>{{d.route}}</td>
         <td>{{d.unique_visits}}</td>
         <td>{{ usePagesStore().findWebsite(d.website_id)?.name??"" }}</td>
+        <td>{{formatDate(d.created_at)}}</td>
       </tr>
     </tbody>
   </table>

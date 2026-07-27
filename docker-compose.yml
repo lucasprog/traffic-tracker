@@ -94,6 +94,24 @@ services:
     networks:
       - traffic-web-network
 
+  example-site:
+    build:
+      context: .
+      dockerfile: example-website/docker/Dockerfile
+    user: "${UID}:${GID}"
+    container_name: example-site
+    working_dir: /var/www
+    volumes:
+      - ./example-website:/var/www
+    ports:
+      - "8081:80"
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
+    stdin_open: true
+    tty: true
+    networks:
+      - traffic-web-network
+
 networks:
   traffic-web-network:
 
