@@ -6,8 +6,17 @@ const router = createRouter({
       {
         path: '/',
         name: 'index',
-        component: () => import('../pages/websites/page.vue'),
-        meta: { requiresAuth: true },
+        component: () => import('../pages/websites.vue'),
+      },
+      {
+        path: '/pages/all',
+        name: 'pages',
+        component: () => import('../pages/pages.vue'),
+      },
+      {
+        path: '/pages/:website',
+        name: 'pages',
+        component: () => import('../pages/pages.vue'),
       },
   ],
 })

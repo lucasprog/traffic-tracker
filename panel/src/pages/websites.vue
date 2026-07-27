@@ -1,31 +1,13 @@
-<script setup>
-  import {useWebSitesStore} from "../../stores/websites.ts";
-  import Modal from "../../components/modal.vue";
-  import Alert from "../../components/alert.vue";
+<script setup lang="ts">
+  import {useWebSitesStore} from "../stores/websites.ts";
 
   import { computed, onMounted, ref } from "vue";
-
-  const webSitesStore = useWebSitesStore();
 
   onMounted(function(){
     useWebSitesStore().get();
   });
 
   const data = computed(() => useWebSitesStore().websitesData);
-
-  const closeModal = () => {
-    useWebSitesStore().closeModal()
-  }
-
-  const submit = async () => {
-    if( useWebSitesStore().formEditId )
-    {
-      await useWebSitesStore().update();
-    }else{
-      await useWebSitesStore().save();
-    }
-    useWebSitesStore().get();
-  }
 
   const onEdit = (website) => {
     useWebSitesStore().openModal();
@@ -61,23 +43,12 @@
           <button class="btn btn-delete" @click="onDelete(d)">
             Delete
           </button>
+          <router-link :to="`/pages/${d.id}`">View Data Pages</router-link to="/">
         </td>
       </tr>
     </tbody>
   </table>
-  <Modal :show="useWebSitesStore().modal" :close="closeModal">
-    <form @submit.prevent="submit()">
-      <input v-model="useWebSitesStore().form.name" name="name" placeholder="Please input the name of Website" />
-      <input v-model="useWebSitesStore().form.domain" name="domain" placeholder="Please input the domain of Website" />
-      <button type="submit">Save</button>
-      <Alert
-        v-if="useWebSitesStore().message.type"
-        :message="useWebSitesStore().message.message"
-        :type="useWebSitesStore().message.type"
-        :title="useWebSitesStore().message.title"
-      />
-    </form>
-  </Modal>
+
 </template>
 <style scoped lang="scss">
 @reference 'tailwindcss';
@@ -86,17 +57,7 @@
     @apply w-full ;
   }
 
-  form{
-    @apply
-      flex flex-col gap-4
-    ;
 
-    button{
-      @apply py-2 px-4 max-w-[120px] bg-green-600 text-white rounded hover:opacity-80;
-    }
-
-
-  }
 
   .btn{
     @apply px-4 py-1 max-w-[100px] rounded mr-4 mb-2 hover:opacity-80;

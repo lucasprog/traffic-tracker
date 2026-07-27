@@ -12,7 +12,7 @@
             <router-link to="/">Websites</router-link>
           </li>
           <li>
-            <router-link to="/">Pages</router-link>
+            <router-link to="/pages/all">Pages</router-link>
           </li>
         </ul>
       </nav>
