@@ -8,7 +8,7 @@ use System\Services\Response\ResponseResolver as Response;
 
 class PagesController
 {
-      public function __construct(protected PagesService $pagesService){}
+    public function __construct(protected PagesService $pagesService){}
 
     public function getByWebsite(int $website_id, Request $request)
     {

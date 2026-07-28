@@ -1,23 +1,19 @@
-# WIP:Traffic Tracker
 
+# Traffic Tracker
+  
 Welcome to the project Traffic Tracker, a platform made to track websites, e-commerce, and web platforms.
+   
+### Setup Project
+After cloning the repository, run the command below:
 
+    docker compose up -d
 
-## Next steps:
-### CoreAPI
-- Creation of tests
-- Creation of database
-- Creation of routes api
-- Creation authentication API
--
+All services will run; the database schema will be created automatically at the end of the MySQL container finishing initialization.
+    
+### Logs
 
-### Dashboard Front
-- Start project
-- Creation of pages
-- Creation of state manager 
-- Creation connection with API
+    docker compose logs -f
+If you'd like to see a specific log container, just run:
 
-### Plugin JS Tracker
-- Creation of logic to track website
-- Creation of connection with API
-- Definition of how the plugin will be intalled.
+    docker compose logs [name_container] -f
+

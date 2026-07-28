@@ -8,10 +8,7 @@ class Request
 {
     protected array $data = [];
 
-    public function __construct(protected RequestResolver $requestResolver)
-    {
-        
-    }
+    public function __construct(protected RequestResolver $requestResolver){ }
 
     public function post():array
     {
